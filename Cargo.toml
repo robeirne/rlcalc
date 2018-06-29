@@ -1,0 +1,8 @@
+[package]
+name = "rlcalc"
+version = "0.1.0"
+authors = ["Ryan O'Beirne <robeirne@spoonflower.com>"]
+description = "Calculate roll length based on core diameter, roll diameter, and substrate thickness."
+
+[dependencies]
+clap = "2.32.0"
