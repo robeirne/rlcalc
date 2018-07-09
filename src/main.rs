@@ -17,20 +17,19 @@ fn main() {
         )
     ).get_matches();
 
-    let coreod: f32 = matches.value_of("coreod").unwrap().parse().unwrap();
-    let rollod: f32 = matches.value_of("rollod").unwrap().parse().unwrap();
-    let thickness: f32 = matches.value_of("thickness").unwrap().parse().unwrap();
+    let coreod: f64 = matches.value_of("coreod").unwrap().parse().unwrap();
+    let rollod: f64 = matches.value_of("rollod").unwrap().parse().unwrap();
+    let thickness: f64 = matches.value_of("thickness").unwrap().parse().unwrap();
     //eprintln!("Core OD:\t{}", coreod);
     //eprintln!("Roll OD:\t{}", rollod);
     //eprintln!("Thickness:\t{}", thickness);
 
-    fn length_calc(core: f32, roll: f32, thick: f32) -> f32 {
-        let mut len: f32 = 0.0;
-        let mut diam: f32 = core;
+    fn length_calc(core: f64, roll: f64, thick: f64) -> f64 {
+        let mut len: f64 = 0.0;
+        let mut diam: f64 = core;
         let result = loop {
-           len += diam * std::f32::consts::PI; 
+           len += diam * std::f64::consts::PI; 
            diam += 2.0 * thick;
-           //println!("LEN: {}\tDIAM: {}", len, diam);
            if diam >= roll {
                break len;
            }
