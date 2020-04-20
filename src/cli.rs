@@ -62,6 +62,25 @@ pub fn app() -> App<'static, 'static> {
                 .validator(is_pos_float)
                 .conflicts_with("thickness")
         )
+
+        // Flags
+        .arg(
+            Arg::with_name("units")
+                .help("Units of measure")
+                .long("units")
+                .short("u")
+                .possible_values(&["in", "ft", "yd", "mm", "cm", "m"])
+                .default_value("in")
+                .takes_value(true)
+        )
+        .arg(
+            Arg::with_name("convert")
+                .help("Convert to units")
+                .short("C")
+                .long("convert")
+                .possible_values(&["in", "ft", "yd", "mm", "cm", "m"])
+                .takes_value(true)
+        )
 }
 
 fn is_pos_float(arg: String) -> std::result::Result<(), String> {

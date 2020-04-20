@@ -1,6 +1,8 @@
 mod cli;
 
 use std::f32::consts::PI;
+mod units;
+use units::*;
 
 type BoxErr = Box<dyn std::error::Error>;
 type Result<T> = std::result::Result<T, BoxErr>;
@@ -8,10 +10,13 @@ type Result<T> = std::result::Result<T, BoxErr>;
 fn main() -> Result<()> {
     let matches = cli::app().get_matches();
 
-    let length = Roll::from(&matches).length();
+    let mut length = Roll::from(&matches).length();
 
-    let formatted_number = format!("{:0.02}", length / 36.0);
-    println!("{}\tYARDS", formatted_number);
+    if let Some(units) = matches.value_of("convert") {
+        length.convert_mut(units.parse()?);
+    }
+
+    println!("{}", length);
 
     Ok(())
 }
@@ -20,17 +25,18 @@ struct Roll {
     coreod: f32,
     rollod: f32,
     thickness: f32,
+    units: Units,
 }
 
 impl Roll {
-    fn length(&self) -> f32 {
+    fn length(&self) -> Size {
         let mut len = 0.0_f32;
         let mut diam = self.coreod;
         loop {
             len += diam * PI;
             diam += 2.0 * self.thickness;
             if diam >= self.rollod {
-                break len;
+                break self.units.size(len);
             }
         }
     }
@@ -56,11 +62,18 @@ impl From<&clap::ArgMatches<'static>> for Roll {
             .expect("matches::thickness")
             .parse()
             .expect("parse::thickness");
+        let units = matches
+            .value_of("units")
+            .expect("matches::units")
+            .parse()
+            .expect("parse::units");
 
         Roll {
             coreod,
             rollod,
             thickness,
+            units,
         }
     }
 }
+
