@@ -1,6 +1,6 @@
 mod cli;
 
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 mod units;
 use units::*;
 
@@ -10,27 +10,27 @@ type Result<T> = std::result::Result<T, BoxErr>;
 fn main() -> Result<()> {
     let matches = cli::app().get_matches();
 
-    let mut length = Roll::from(&matches).length();
+    let mut roll = Roll::from(&matches);
 
     if let Some(units) = matches.value_of("convert") {
-        length.convert_mut(units.parse()?);
+        roll.convert_mut(units.parse()?);
     }
 
-    println!("{}", length);
+    println!("{:0.02}", roll.length());
 
     Ok(())
 }
 
 struct Roll {
-    coreod: f32,
-    rollod: f32,
-    thickness: f32,
+    coreod: f64,
+    rollod: f64,
+    thickness: f64,
     units: Units,
 }
 
 impl Roll {
     fn length(&self) -> Size {
-        let mut len = 0.0_f32;
+        let mut len = 0.0_f64;
         let mut diam = self.coreod;
         loop {
             len += diam * PI;
@@ -39,6 +39,31 @@ impl Roll {
                 break self.units.size(len);
             }
         }
+    }
+
+    fn coreod(&self) -> Size {
+        self.units.size(self.coreod)
+    }
+
+    fn rollod(&self) -> Size {
+        self.units.size(self.rollod)
+    }
+
+    fn thickness(&self) -> Size {
+        self.units.size(self.thickness)
+    }
+
+    fn convert(&self, units: Units) -> Self {
+        Roll {
+            coreod: self.coreod().convert(units).value(),
+            rollod: self.rollod().convert(units).value(),
+            thickness: self.thickness().convert(units).value(),
+            units
+        }
+    }
+
+    fn convert_mut(&mut self, units: Units) {
+        *self = self.convert(units)
     }
 }
 

@@ -69,7 +69,7 @@ pub fn app() -> App<'static, 'static> {
                 .help("Units of measure")
                 .long("units")
                 .short("u")
-                .possible_values(&["in", "ft", "yd", "mm", "cm", "m"])
+                .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
                 .default_value("in")
                 .takes_value(true)
         )
@@ -78,7 +78,7 @@ pub fn app() -> App<'static, 'static> {
                 .help("Convert to units")
                 .short("C")
                 .long("convert")
-                .possible_values(&["in", "ft", "yd", "mm", "cm", "m"])
+                .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
                 .takes_value(true)
         )
 }
@@ -89,7 +89,7 @@ fn is_pos_float(arg: String) -> std::result::Result<(), String> {
             if f > 0.0 {
                 Ok(())
             } else {
-                Err(format!("must be positive: '{}'", arg))
+                Err(format!("must be greater than zero: {}", arg))
             }
         }
         Err(e) => Err(format!("{}: '{}'", e, arg)),
