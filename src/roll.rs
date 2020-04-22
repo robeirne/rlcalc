@@ -50,29 +50,47 @@ impl Roll {
 
 impl From<&ArgMatches<'static>> for Roll {
     fn from(matches: &clap::ArgMatches) -> Self {
-        let coreod = matches
-            .value_of("coreod")
-            .or(matches.value_of("core"))
-            .expect("matches::coreod")
-            .parse()
-            .expect("parse::coreod");
-        let rollod = matches
-            .value_of("rollod")
-            .or(matches.value_of("roll"))
-            .expect("matches::rollod")
-            .parse()
-            .expect("parse::rollod");
-        let thickness = matches
-            .value_of("thickness")
-            .or(matches.value_of("thick"))
-            .expect("matches::thickness")
-            .parse()
-            .expect("parse::thickness");
-        let units = matches
+        let units: Units = matches
             .value_of("units")
             .expect("matches::units")
             .parse()
             .expect("parse::units");
+
+        let core_matches = matches
+            .value_of("coreod")
+            .or(matches.value_of("core"))
+            .expect("matches::coreod");
+        let coreod = if let Ok(size) = core_matches.parse::<Size>() {
+            size.convert(units).value()
+        } else {
+            units
+                .size(core_matches.parse::<f64>().expect("parse::core::f64"))
+                .value()
+        };
+
+        let roll_matches = matches
+            .value_of("rollod")
+            .or(matches.value_of("roll"))
+            .expect("matches::rollod");
+        let rollod = if let Ok(size) = roll_matches.parse::<Size>() {
+            size.convert(units).value()
+        } else {
+            units
+                .size(roll_matches.parse::<f64>().expect("parse::roll::f64"))
+                .value()
+        };
+        
+        let thick_matches = matches
+            .value_of("thickness")
+            .or(matches.value_of("thick"))
+            .expect("matches::thickness");
+        let thickness = if let Ok(size) = thick_matches.parse::<Size>() {
+            size.convert(units).value()
+        } else {
+            units
+                .size(thick_matches.parse::<f64>().expect("parse::thick::f64"))
+                .value()
+        };
 
         Roll {
             coreod,

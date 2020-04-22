@@ -130,13 +130,23 @@ impl FromStr for Units {
             "mm" | "milimeter" | "milimeters" => Milimeters,
             "cm" | "centimeter" | "centimeters" => Centimeters,
             "m" | "meter" | "meters" => Meters,
-            other => return Err(InvalidUnits(other.to_string()))
+            other => return Err(InvalidUnits::new(other))
         })
     }
 }
 
 #[derive(Debug)]
 pub struct InvalidUnits(String);
+
+impl InvalidUnits {
+    pub fn new<T: ToString>(t: T) -> Self {
+        InvalidUnits(t.to_string())
+    }
+
+    pub fn boxed<T: ToString>(t: T) -> Box<Self> {
+        Box::new(InvalidUnits::new(t))
+    }
+}
 
 impl<'a> fmt::Display for InvalidUnits {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

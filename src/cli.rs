@@ -1,4 +1,5 @@
 use clap::*;
+use crate::*;
 
 pub fn app() -> App<'static, 'static> {
     App::new(crate_name!())
@@ -15,7 +16,7 @@ pub fn app() -> App<'static, 'static> {
                 .alias("core-od")
                 .required_unless("core")
                 .takes_value(true)
-                .validator(is_pos_float),
+                .validator(is_float_or_size),
         )
         .arg(
             Arg::with_name("rollod")
@@ -25,7 +26,7 @@ pub fn app() -> App<'static, 'static> {
                 .alias("roll-od")
                 .required_unless("roll")
                 .takes_value(true)
-                .validator(is_pos_float),
+                .validator(is_float_or_size),
         )
         .arg(
             Arg::with_name("thickness")
@@ -34,7 +35,7 @@ pub fn app() -> App<'static, 'static> {
                 .long("thickness")
                 .required_unless("thick")
                 .takes_value(true)
-                .validator(is_pos_float),
+                .validator(is_float_or_size),
         )
 
         // Positional arguments, in order
@@ -43,7 +44,7 @@ pub fn app() -> App<'static, 'static> {
                 .help("Outside diameter of cardboard tube")
                 .value_name("coreod")
                 .index(1)
-                .validator(is_pos_float)
+                .validator(is_float_or_size)
                 .conflicts_with("coreod")
         )
         .arg(
@@ -51,7 +52,7 @@ pub fn app() -> App<'static, 'static> {
                 .help("Outside diameter of rolled substrate")
                 .value_name("rollod")
                 .index(2)
-                .validator(is_pos_float)
+                .validator(is_float_or_size)
                 .conflicts_with("rollod")
         )
         .arg(
@@ -59,7 +60,7 @@ pub fn app() -> App<'static, 'static> {
                 .help("Thickness of substrate")
                 .value_name("thickness")
                 .index(3)
-                .validator(is_pos_float)
+                .validator(is_float_or_size)
                 .conflicts_with("thickness")
         )
 
@@ -94,4 +95,22 @@ fn is_pos_float(arg: String) -> std::result::Result<(), String> {
         }
         Err(e) => Err(format!("{}: '{}'", e, arg)),
     }
+}
+
+fn is_valid_size(arg: String) -> std::result::Result<(), String> {
+    match arg.parse::<Size>() {
+        Ok(s) => {
+            if s.value() > 0.0 {
+                Ok(())
+            } else {
+                Err(format!("must be greater than zero: {}", arg))
+            }
+        }
+        Err(e) => Err(format!("{}: '{}'", e, arg)),
+    }
+}
+
+fn is_float_or_size(arg: String) -> std::result::Result<(), String> {
+    is_pos_float(arg.clone())
+        .or(is_valid_size(arg))
 }
