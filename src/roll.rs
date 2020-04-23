@@ -2,6 +2,7 @@ use crate::*;
 use clap::*;
 use std::f64::consts::PI;
 
+#[derive(Debug, Clone)]
 pub struct Roll {
     coreod: f64,
     rollod: f64,
@@ -10,6 +11,15 @@ pub struct Roll {
 }
 
 impl Roll {
+    pub fn new(coreod: f64, rollod: f64, thickness: f64, units: Units) -> Self {
+        Roll {
+            coreod,
+            rollod,
+            thickness,
+            units,
+        }
+    }
+
     pub fn length(&self) -> Size {
         let mut len = 0.0_f64;
         let mut diam = self.coreod;
@@ -26,12 +36,32 @@ impl Roll {
         self.units.size(self.coreod)
     }
 
+    pub fn set_coreod(&mut self, value: f64) {
+        self.coreod = value;
+    }
+
     pub fn rollod(&self) -> Size {
         self.units.size(self.rollod)
     }
 
+    pub fn set_rollod(&mut self, value: f64) {
+        self.rollod = value;
+    }
+
     pub fn thickness(&self) -> Size {
         self.units.size(self.thickness)
+    }
+
+    pub fn set_thickness(&mut self, value: f64) {
+        self.thickness = value;
+    }
+
+    pub fn units(&self) -> &Units {
+        &self.units
+    }
+
+    pub fn set_units(&mut self, units: Units) {
+        self.convert_mut(units)
     }
 
     pub fn convert(&self, units: Units) -> Self {
@@ -45,6 +75,12 @@ impl Roll {
 
     pub fn convert_mut(&mut self, units: Units) {
         *self = self.convert(units)
+    }
+}
+
+impl Default for Roll {
+    fn default() -> Self {
+        Roll::new(3.25, 10.0, 0.015, Inches)
     }
 }
 

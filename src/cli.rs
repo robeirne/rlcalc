@@ -84,6 +84,19 @@ pub fn app() -> App<'static, 'static> {
         )
 }
 
+pub fn gui_app() -> App<'static, 'static> {
+    App::new("rlcalc-gui")
+        .arg(
+            Arg::with_name("units")
+                .help("Units of measure")
+                .long("units")
+                .short("u")
+                .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
+                .default_value("in")
+                .takes_value(true)
+        )
+}
+
 fn is_pos_float(arg: String) -> std::result::Result<(), String> {
     match arg.parse::<f32>() {
         Ok(f) => {

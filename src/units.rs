@@ -26,6 +26,10 @@ impl Size {
     pub fn value(&self) -> f64 {
         self.value
     }
+
+    pub fn units(&self) -> Units {
+        self.units
+    }
 }
 
 impl fmt::Display for Size {
@@ -93,7 +97,7 @@ pub enum Units {
 }
 
 impl Units {
-    fn unit_suffix(&self) -> &'static str {
+    pub fn unit_suffix(&self) -> &'static str {
         match self {
             Mils => "mil",
             Inches => "in",

@@ -1,7 +1,5 @@
 use rlcalc::*;
 
-mod cli;
-
 fn main() -> Result<()> {
     let matches = cli::app().get_matches();
 
