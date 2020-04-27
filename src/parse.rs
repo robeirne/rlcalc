@@ -5,12 +5,14 @@ use lazy_static::*;
 use regex::*;
 
 lazy_static! {
-    static ref SIZE_REGEX: Regex = Regex::new(r#"(?x)
+    static ref SIZE_REGEX: Regex = Regex::new(
+        r#"(?x)
        ^(?P<value>[[:digit:]\.]+)
        (?P<space>\ +)?
        (?P<units>[[:alpha:]"']+)
        "#
-    ).expect("SIZE_REGEX");
+    )
+    .expect("SIZE_REGEX");
 }
 
 fn parsley(s: &str) -> Option<(f64, Units)> {
@@ -45,7 +47,7 @@ macro_rules! parse_units {
                 Ok(())
             }
         }
-    }
+    };
 }
 
 parse_units!("42in", Inches, 42.0, a);

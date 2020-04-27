@@ -1,12 +1,11 @@
-use clap::*;
 use crate::*;
+use clap::*;
 
 pub fn app() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
-        
         // Named arguments, in no particular order
         .arg(
             Arg::with_name("coreod")
@@ -37,7 +36,6 @@ pub fn app() -> App<'static, 'static> {
                 .takes_value(true)
                 .validator(is_float_or_size),
         )
-
         // Positional arguments, in order
         .arg(
             Arg::with_name("core")
@@ -45,7 +43,7 @@ pub fn app() -> App<'static, 'static> {
                 .value_name("coreod")
                 .index(1)
                 .validator(is_float_or_size)
-                .conflicts_with("coreod")
+                .conflicts_with("coreod"),
         )
         .arg(
             Arg::with_name("roll")
@@ -53,7 +51,7 @@ pub fn app() -> App<'static, 'static> {
                 .value_name("rollod")
                 .index(2)
                 .validator(is_float_or_size)
-                .conflicts_with("rollod")
+                .conflicts_with("rollod"),
         )
         .arg(
             Arg::with_name("thick")
@@ -61,9 +59,8 @@ pub fn app() -> App<'static, 'static> {
                 .value_name("thickness")
                 .index(3)
                 .validator(is_float_or_size)
-                .conflicts_with("thickness")
+                .conflicts_with("thickness"),
         )
-
         // Flags
         .arg(
             Arg::with_name("units")
@@ -72,7 +69,7 @@ pub fn app() -> App<'static, 'static> {
                 .short("u")
                 .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
                 .default_value("in")
-                .takes_value(true)
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("convert")
@@ -80,21 +77,20 @@ pub fn app() -> App<'static, 'static> {
                 .short("C")
                 .long("convert")
                 .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
-                .takes_value(true)
+                .takes_value(true),
         )
 }
 
 pub fn gui_app() -> App<'static, 'static> {
-    App::new("rlcalc-gui")
-        .arg(
-            Arg::with_name("units")
-                .help("Units of measure")
-                .long("units")
-                .short("u")
-                .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
-                .default_value("in")
-                .takes_value(true)
-        )
+    App::new("rlcalc-gui").arg(
+        Arg::with_name("units")
+            .help("Units of measure")
+            .long("units")
+            .short("u")
+            .possible_values(&["in", "ft", "yd", "mm", "cm", "m", "mil"])
+            .default_value("in")
+            .takes_value(true),
+    )
 }
 
 fn is_pos_float(arg: String) -> std::result::Result<(), String> {
@@ -124,6 +120,5 @@ fn is_valid_size(arg: String) -> std::result::Result<(), String> {
 }
 
 fn is_float_or_size(arg: String) -> std::result::Result<(), String> {
-    is_pos_float(arg.clone())
-        .or(is_valid_size(arg))
+    is_pos_float(arg.clone()).or(is_valid_size(arg))
 }

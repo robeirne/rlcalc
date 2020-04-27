@@ -69,7 +69,7 @@ impl Roll {
             coreod: self.coreod().convert(units).value(),
             rollod: self.rollod().convert(units).value(),
             thickness: self.thickness().convert(units).value(),
-            units
+            units,
         }
     }
 
@@ -115,7 +115,7 @@ impl From<&ArgMatches<'static>> for Roll {
                 .size(roll_matches.parse::<f64>().expect("parse::roll::f64"))
                 .value()
         };
-        
+
         let thick_matches = matches
             .value_of("thickness")
             .or(matches.value_of("thick"))
@@ -136,4 +136,3 @@ impl From<&ArgMatches<'static>> for Roll {
         }
     }
 }
-

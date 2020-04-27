@@ -1,5 +1,5 @@
-use std::str::FromStr;
 use std::fmt;
+use std::str::FromStr;
 
 pub use Units::*;
 
@@ -80,7 +80,7 @@ impl ToMilimeters for Size {
 
         Size {
             units: Milimeters,
-            value
+            value,
         }
     }
 }
@@ -110,10 +110,7 @@ impl Units {
     }
 
     pub fn size(self, value: f64) -> Size {
-        Size {
-            units: self,
-            value,
-        }
+        Size { units: self, value }
     }
 }
 
@@ -128,13 +125,13 @@ impl FromStr for Units {
     fn from_str(s: &str) -> std::result::Result<Self, InvalidUnits> {
         Ok(match s.to_lowercase().trim() {
             "mil" | "mils" | "thou" => Mils,
-            "in" | "inch" | "inches"  | "\"" => Inches,
+            "in" | "inch" | "inches" | "\"" => Inches,
             "ft" | "foot" | "feet" | "\'" => Feet,
             "yd" | "yard" | "yards" => Yards,
             "mm" | "milimeter" | "milimeters" => Milimeters,
             "cm" | "centimeter" | "centimeters" => Centimeters,
             "m" | "meter" | "meters" => Meters,
-            other => return Err(InvalidUnits::new(other))
+            other => return Err(InvalidUnits::new(other)),
         })
     }
 }
@@ -173,7 +170,12 @@ mod test {
         fn almost_eq(&self, rhs: &Rhs) -> bool;
         fn assert_almost_eq(lhs: &Self, rhs: &Rhs) {
             if !lhs.almost_eq(rhs) {
-                panic!("assertion failed: {:?} != {:?} (within {:?})", lhs, rhs, Self::DELTA);
+                panic!(
+                    "assertion failed: {:?} != {:?} (within {:?})",
+                    lhs,
+                    rhs,
+                    Self::DELTA
+                );
             }
         }
     }
@@ -197,7 +199,7 @@ mod test {
                     Ok(())
                 }
             }
-        }
+        };
     }
 
     units_round_trip!(Centimeters, Centimeters, 9558.12962);
@@ -262,7 +264,7 @@ mod test {
                     Ok(())
                 }
             }
-        }
+        };
     }
 
     units_expected!(Centimeters, Centimeters, 1.0, 1.0);
@@ -275,7 +277,7 @@ mod test {
     units_expected!(Feet, Centimeters, 1.0, 30.48);
     units_expected!(Feet, Feet, 1.0, 1.0);
     units_expected!(Feet, Inches, 1.0, 12.0);
-    units_expected!(Feet, Meters, 1.0, 0.3048) ;
+    units_expected!(Feet, Meters, 1.0, 0.3048);
     units_expected!(Feet, Milimeters, 1.0, 304.8);
     units_expected!(Feet, Mils, 1.0, 12_000.0);
     units_expected!(Feet, Yards, 3.0, 1.0);
@@ -315,4 +317,3 @@ mod test {
     units_expected!(Yards, Mils, 1.0, 36_000.0);
     units_expected!(Yards, Yards, 1.0, 1.0);
 }
-
